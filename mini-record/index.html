@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perekam Suara</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+            background: linear-gradient(45deg, #8A2BE2, #FF1493); /* Background ungu dan pink */
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        h1 {
+            color: white;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+        audio {
+            margin-top: 20px;
+            width: 100%;
+        }
+        #equalizer {
+            display: none;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Perekam Suara</h1>
+    <button id="startBtn">Mulai Merekam</button>
+    <button id="stopBtn" disabled>Berhenti Merekam</button>
+    <audio id="audioPlayback" controls></audio>
+    <img id="equalizer" src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExZnhzZ3diYWt3amJ3OWcxbXQ0Zm02NDhyaGEyZzJ5OGR4bDY3bGNudSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/hEFAf3C5wniZEqRtbx/giphy.webp" alt="Equalizer GIF" width="200" />
+
+    <script>
+        let mediaRecorder;
+        let audioChunks = [];
+        let startButton = document.getElementById("startBtn");
+        let stopButton = document.getElementById("stopBtn");
+        let audioPlayback = document.getElementById("audioPlayback");
+        let equalizer = document.getElementById("equalizer");
+
+        startButton.addEventListener("click", () => {
+            startRecording();
+        });
+
+        stopButton.addEventListener("click", () => {
+            stopRecording();
+        });
+
+        async function startRecording() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                
+                mediaRecorder.ondataavailable = event => {
+                    audioChunks.push(event.data);
+                };
+                
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    audioPlayback.src = audioUrl;
+                };
+                
+                mediaRecorder.start();
+                startButton.disabled = true;
+                stopButton.disabled = false;
+                equalizer.style.display = 'block';  // Tampilkan GIF equalizer saat merekam
+            } catch (err) {
+                alert("Tidak dapat mengakses mikrofon: " + err.message);
+            }
+        }
+
+        function stopRecording() {
+            mediaRecorder.stop();
+            startButton.disabled = false;
+            stopButton.disabled = true;
+            equalizer.style.display = 'none';  // Sembunyikan GIF equalizer setelah berhenti merekam
+        }
+    </script>
+</body>
+</html>
