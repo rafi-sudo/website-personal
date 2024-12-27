@@ -1,0 +1,1 @@
+Ini semua berisi aset web <a href="web.ganisrafi.my.id" target="blank">LINK MEDIA SOSIAL</a> , dan <a href="web.ganisrafi.my.id/about-us" tagret="blank">PORTOFOLIO SAYA</a>, silarang keras mengambil repository ini ya...😉.
